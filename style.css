@@ -1,77 +1,117 @@
-* {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-    overscroll-behavior: none; 
-}
-
-html, body {
-    width: 100%;
-    height: 100%;
+body {
+    font-family: sans-serif;
+    text-align: center;
+    background-color: #222;
+    color: white;
+    padding: 20px;
     margin: 0;
-    padding: 0;
-    overflow: hidden;
-    position: fixed;
-    font-family: -apple-system, system-ui, sans-serif;
-    background-color: #121212;
-    color: #ffffff;
 }
 
-#main-container {
-    width: 100%;
-    height: 100%;
+select {
+    padding: 10px;
+    font-size: 1.1rem;
+    background: #444;
+    color: white;
+    border: 1px solid #666;
+    margin-bottom: 10px;
+}
+
+#emoji-picker {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+    max-width: 300px;
+    margin: 10px auto;
+}
+
+.emoji-option {
+    font-size: 1.5rem;
+    padding: 5px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 5px;
+}
+
+.emoji-option.selected {
+    border-color: #ffcc00;
+    background-color: #444;
+}
+
+/* Style for emojis already taken by other players */
+.emoji-option.taken {
+    opacity: 0.1;
+    cursor: not-allowed;
+    filter: grayscale(100%);
+}
+
+#number-buttons {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    max-width: 400px;
+    margin: 10px auto;
+}
+
+#special-buttons, #controls, #results-controls {
     display: flex;
-    flex-direction: column;
-    padding: 8px;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-h1 { font-size: 1.1rem; margin: 5px 0; color: #ffcc00; }
-
-.setup-box { background: #1e1e1e; padding: 10px; border-radius: 10px; margin-bottom: 8px; }
-select, input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #2a2a2a; color: white; font-size: 1rem; }
-
-#emoji-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 5px 0; }
-.emoji-option { font-size: 1.3rem; padding: 6px; text-align: center; border-radius: 8px; }
-.emoji-option.selected { border: 2px solid #ffcc00; }
-.emoji-option.taken { opacity: 0.1; filter: grayscale(1); pointer-events: none; }
-
-#mobile-header { background: #1e1e1e; padding: 6px; border-radius: 8px; margin-bottom: 5px; }
-.header-top { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem; }
-#dart-count-display { color: #ffcc00; font-size: 0.8rem; }
-
-#scoreboard-area { display: flex; overflow-x: auto; gap: 8px; margin-bottom: 5px; }
-.player-card { flex: 0 0 110px; padding: 6px; background: #2a2a2a; border-radius: 8px; border: 1px solid #444; font-size: 0.75rem; }
-.active-player { border: 2px solid #ffcc00; }
-
-#keypad { margin-top: auto; padding-bottom: 5px; }
-
-/* FLEXBOX FOR SIDE-BY-SIDE MODIFIERS */
-.modifier-row { 
-    display: flex; 
-    gap: 5px; 
-    margin-bottom: 5px; 
+.active-modifier {
+    background-color: #ffcc00 !important;
+    color: black !important;
 }
-.mod-btn { 
-    flex: 1; /* This makes both buttons equal width */
-    padding: 12px; 
-    background: #333; 
-    border: 1px solid #444; 
-    color: white; 
+
+button {
+    padding: 15px;
+    font-size: 1rem;
+    cursor: pointer;
+    background-color: #444;
+    color: white;
+    border: 1px solid #666;
+    border-radius: 4px;
+}
+
+button:hover { background-color: #666; }
+
+#start-game-btn { background-color: #28a745; margin: 20px auto; }
+
+.player-card {
+    border: 1px solid #555;
+    padding: 15px;
+    margin: 10px;
+    display: inline-block;
+    min-width: 170px;
+    vertical-align: top;
     border-radius: 8px;
+    background-color: #2a2a2a;
 }
-.active-mod { background: #ffcc00 !important; color: #000 !important; }
 
-#number-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-#number-buttons button { padding: 10px 0; background: #2a2a2a; color: white; border-radius: 6px; font-size: 1rem; }
+.active-player { border: 3px solid #ffcc00; background-color: #333; }
+.dead { opacity: 0.3; text-decoration: line-through; }
 
-.special-row { display: flex; gap: 4px; margin: 5px 0; }
-.spec-btn { flex: 1; padding: 8px; background: #333; font-size: 0.75rem; color: white; border-radius: 6px; }
+.cricket-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 5px;
+    font-size: 0.9rem;
+    margin-top: 10px;
+    text-align: left;
+    padding: 8px;
+    background: #111;
+    border-radius: 4px;
+}
 
-.control-row { display: flex; gap: 4px; }
-.undo-btn { flex: 1; background: #8e1f29; padding: 10px; color: white; border-radius: 6px; }
-.quit-btn { flex: 1; background: #444; padding: 10px; color: white; border-radius: 6px; }
+.target-open { color: #888; }
+.target-closed { color: #28a745; font-weight: bold; }
+.target-locked { color: #dc3545; font-weight: bold; }
 
-.primary-btn { width: 100%; background: #28a745; padding: 12px; color: white; border-radius: 8px; }
-
-.cricket-grid { display: grid; grid-template-columns: 1fr 1fr; font-size: 0.6rem; background: #111; padding: 3px; margin-top: 3px; }
-.target-closed { color: #28a745; }
-.target-locked { color: #ff4444; }
+.leaderboard-item {
+    background: #333;
+    padding: 10px;
+    margin: 5px auto;
+    max-width: 300px;
+    border-radius: 5px;
+}
