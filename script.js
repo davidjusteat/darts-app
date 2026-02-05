@@ -11,7 +11,7 @@ let doubleOutRequired = false;
 const funnyEmojis = ["🎯", "🍺", "🍕", "🔥", "🚀", "💀", "💩", "🦄", "👽", "🤖", "🤡", "🦖", "🥨", "🧠", "💅", "🎸", "🕺", "🐱‍👤", "🥑", "🧨"];
 let selectedEmoji = funnyEmojis[0];
 
-window.onload = function() { renderEmojiPicker(); };
+window.onload = () => { renderEmojiPicker(); updateGameDescription(); };
 
 function renderEmojiPicker() {
     const container = document.getElementById('emoji-picker');
@@ -27,21 +27,21 @@ function renderEmojiPicker() {
 function selectEmoji(emoji) { selectedEmoji = emoji; renderEmojiPicker(); }
 
 function updateGameDescription() {
-    const select = document.getElementById('game-type-select');
+    currentGameMode = document.getElementById('game-type-select').value;
     const killerOpts = document.getElementById('killer-options');
     const sX01 = document.getElementById('settings-x01');
-    currentGameMode = select.value;
+    const desc = document.getElementById('game-desc');
     
     if (currentGameMode.includes("01")) {
-        document.getElementById('game-desc').innerText = `Race to zero from ${currentGameMode}.`;
+        desc.innerText = `Race to 0 from ${currentGameMode}.`;
         killerOpts.style.display = "none";
         sX01.style.display = "block";
     } else if (currentGameMode === "killer") {
-        document.getElementById('game-desc').innerText = "Killer: Hit your target 3x to become a Killer!";
+        desc.innerText = "Killer: Hit your target 3x to kill others!";
         killerOpts.style.display = "block";
         sX01.style.display = "none";
     } else {
-        document.getElementById('game-desc').innerText = "Cricket: Close 15-20 and Bullseye!";
+        desc.innerText = "Cricket: Close 15-20 & Bull. Score points!";
         killerOpts.style.display = "none";
         sX01.style.display = "none";
     }
@@ -60,8 +60,7 @@ function addPlayer() {
     });
 
     input.value = "";
-    const nextAvailable = funnyEmojis.find(e => !players.some(p => p.emoji === e));
-    if (nextAvailable) selectedEmoji = nextAvailable;
+    selectedEmoji = funnyEmojis.find(e => !players.some(p => p.emoji === e)) || funnyEmojis[0];
     renderPlayers();
     renderEmojiPicker();
 }
@@ -69,8 +68,8 @@ function addPlayer() {
 function renderPlayers() {
     const display = document.getElementById('player-list-display');
     const startBtn = document.getElementById('start-game-btn');
-    display.innerHTML = players.map((p) => `<span>${p.emoji}</span>`).join(" ");
-    if (players.length > 0) startBtn.style.display = "block";
+    display.innerHTML = players.map(p => `<span>${p.emoji}</span>`).join(" ");
+    startBtn.style.display = players.length > 0 ? "block" : "none";
 }
 
 function startGame() {
@@ -82,22 +81,19 @@ function startGame() {
     
     useKillerMultipliers = document.getElementById('killer-multipliers-toggle').checked;
     doubleOutRequired = document.getElementById('double-out-toggle').checked;
+    let startScore = (currentGameMode.includes("01")) ? parseInt(currentGameMode) : 0; 
 
-    let startingScore = (currentGameMode.includes("01")) ? parseInt(currentGameMode) : 0; 
-
-    players.forEach((p, index) => {
+    players.forEach((p, i) => {
         p.finished = false;
-        p.score = startingScore;
-        p.hits = 0;
-        p.lives = 5;
-        p.isKiller = false;
+        p.score = startScore;
+        p.hits = 0; p.lives = 5; p.isKiller = false;
         p.cricket = { 20:0, 19:0, 18:0, 17:0, 16:0, 15:0, 25:0 };
-        if (currentGameMode === "killer") p.targetNumber = randomTargets[index];
+        if (currentGameMode === "killer") p.targetNumber = randomTargets[i];
     });
 
     document.getElementById('setup-screen').style.display = "none";
     document.getElementById('results-screen').style.display = "none";
-    document.getElementById('game-screen').style.display = "block";
+    document.getElementById('game-screen').style.display = "flex";
     document.getElementById('game-title-display').innerText = currentGameMode.toUpperCase();
     
     generateKeypad();
@@ -106,14 +102,10 @@ function startGame() {
 
 function generateKeypad() {
     const container = document.getElementById('number-buttons');
-    container.innerHTML = ""; 
-    for (let i = 1; i <= 20; i++) {
-        container.innerHTML += `<button onclick="submitScore(${i})">${i}</button>`;
-    }
+    container.innerHTML = Array.from({length:20}, (_,i) => `<button onclick="submitScore(${i+1})">${i+1}</button>`).join("");
 }
 
 function setMultiplier(m) {
-    // Vibrate on tap (if supported)
     if (navigator.vibrate) navigator.vibrate(10);
     currentMultiplier = (currentMultiplier === m) ? 1 : m;
     updateModifierUI();
@@ -133,25 +125,19 @@ function submitScore(points) {
     updateUI();
 }
 
-// ... logic functions (handleX01, handleKiller, handleCricket) remain identical to previous ...
 function handleX01(points, mult) {
     let p = players[currentPlayerIndex];
-    let totalHit = points * mult;
-    let newScore = p.score - totalHit;
+    let hit = points * mult;
+    let next = p.score - hit;
+
     if (doubleOutRequired) {
-        if (newScore === 0) {
-            if (mult === 2 || points === 50) {
-                p.score = 0; p.finished = true; winners.push(p.name); checkGameOver(); return;
-            } else {
-                alert("Bust! Double required."); nextTurn(); return;
-            }
-        } else if (newScore === 1) {
-            alert("Bust! Left 1."); nextTurn(); return;
-        }
+        if (next === 0 && (mult === 2 || points === 50)) {
+            p.score = 0; p.finished = true; winners.push(p.name); checkGameOver(); return;
+        } else if (next <= 1) { alert("Bust!"); nextTurn(); return; }
     }
-    if (newScore < 0) { alert("Bust!"); nextTurn(); }
+    if (next < 0) { alert("Bust!"); nextTurn(); }
     else {
-        p.score = newScore;
+        p.score = next;
         dartsThrown++;
         if (p.score === 0) { p.finished = true; winners.push(p.name); checkGameOver(); }
         else if (dartsThrown >= 3) nextTurn();
@@ -160,17 +146,15 @@ function handleX01(points, mult) {
 
 function handleKiller(points, mult) {
     let p = players[currentPlayerIndex];
-    let hitVal = useKillerMultipliers ? mult : 1;
+    let val = useKillerMultipliers ? mult : 1;
     if (points === p.targetNumber) {
-        if (!p.isKiller) {
-            p.hits += hitVal;
-            if (p.hits >= 3) { p.isKiller = true; alert(p.name + " is now a Killer!"); }
-        }
+        p.hits += val;
+        if (p.hits >= 3 && !p.isKiller) { p.isKiller = true; alert(p.name + " is a Killer!"); }
     } else {
-        let victim = players.find(v => v.targetNumber === points && !v.finished);
-        if (p.isKiller && victim) {
-            victim.lives -= hitVal;
-            if (victim.lives <= 0) { victim.lives = 0; victim.finished = true; winners.unshift(victim.name); checkGameOver(); }
+        let vic = players.find(v => v.targetNumber === points && !v.finished);
+        if (p.isKiller && vic) {
+            vic.lives -= val;
+            if (vic.lives <= 0) { vic.lives = 0; vic.finished = true; winners.unshift(vic.name); checkGameOver(); }
         }
     }
     dartsThrown++;
@@ -179,25 +163,24 @@ function handleKiller(points, mult) {
 
 function handleCricket(points, mult) {
     let p = players[currentPlayerIndex];
-    let target = (points === 50) ? 25 : points;
-    let hitsFromDart = (points === 50) ? 2 : mult;
-    if (p.cricket.hasOwnProperty(target)) {
-        for (let i = 0; i < hitsFromDart; i++) {
-            if (p.cricket[target] < 3) p.cricket[target]++;
-            else if (players.some(o => o.name !== p.name && o.cricket[target] < 3)) p.score += target;
+    let t = (points === 50) ? 25 : points;
+    let hits = (points === 50) ? 2 : mult;
+    if (p.cricket.hasOwnProperty(t)) {
+        for (let i = 0; i < hits; i++) {
+            if (p.cricket[t] < 3) p.cricket[t]++;
+            else if (players.some(o => o.name !== p.name && o.cricket[t] < 3)) p.score += t;
         }
     }
-    let allClosed = Object.values(p.cricket).every(h => h >= 3);
-    let topScore = players.every(o => p.score >= o.score);
+    let closed = Object.values(p.cricket).every(h => h >= 3);
+    let lead = players.every(o => p.score >= o.score);
     dartsThrown++;
-    if (allClosed && topScore) { p.finished = true; winners.push(p.name); checkGameOver(); }
+    if (closed && lead) { p.finished = true; winners.push(p.name); checkGameOver(); }
     else if (dartsThrown >= 3) nextTurn();
 }
 
 function checkGameOver() {
     let active = players.filter(p => !p.finished);
-    if (currentGameMode !== "killer" && winners.length > 0) endGame();
-    else if (active.length <= 1) {
+    if ((currentGameMode !== "killer" && winners.length > 0) || active.length <= 1) {
         if (active.length === 1 && !winners.includes(active[0].name)) winners.unshift(active[0].name);
         endGame();
     } else nextTurn();
@@ -205,10 +188,7 @@ function checkGameOver() {
 
 function nextTurn() {
     dartsThrown = 0;
-    do {
-        currentPlayerIndex++;
-        if (currentPlayerIndex >= players.length) currentPlayerIndex = 0;
-    } while (players[currentPlayerIndex].finished);
+    do { currentPlayerIndex = (currentPlayerIndex + 1) % players.length; } while (players[currentPlayerIndex].finished);
 }
 
 function endGame() {
@@ -216,16 +196,11 @@ function endGame() {
     document.getElementById('results-screen').style.display = "block";
     winners.forEach((w, i) => {
         const p = players.find(obj => obj.name === w);
-        if (p) {
-            if (i === 0) p.totalRankPoints += 3;
-            else if (i === 1) p.totalRankPoints += 2;
-            else if (i === 2) p.totalRankPoints += 1;
-        }
+        if (p) p.totalRankPoints += (3 - i > 0 ? 3 - i : 0);
     });
     const display = document.getElementById('leaderboard-display');
-    display.innerHTML = "<h3>Standings:</h3>";
     let sorted = [...players].sort((a, b) => b.totalRankPoints - a.totalRankPoints);
-    sorted.forEach(p => { display.innerHTML += `<div>${p.emoji} ${p.name}: ${p.totalRankPoints} pts</div>`; });
+    display.innerHTML = sorted.map(p => `<div class="leaderboard-item">${p.emoji} ${p.name}: ${p.totalRankPoints} pts</div>`).join("");
 }
 
 function resetToMenu() {
@@ -235,31 +210,34 @@ function resetToMenu() {
     renderEmojiPicker();
 }
 
+function updateModifierUI() {
+    document.getElementById('btn-double').className = (currentMultiplier === 2) ? "mod-btn active-mod" : "mod-btn";
+    document.getElementById('btn-triple').className = (currentMultiplier === 3) ? "mod-btn active-mod" : "mod-btn";
+}
+
 function updateUI() {
-    const scoreArea = document.getElementById('scoreboard-area');
-    scoreArea.innerHTML = "";
-    players.forEach((p, idx) => {
-        if (p.finished && currentGameMode.includes("01")) return;
-        let aClass = (idx === currentPlayerIndex) ? "active-player" : "";
-        let content = "";
-        if (currentGameMode.includes("01")) content = `Score: ${p.score}`;
-        else if (currentGameMode === "killer") content = `T:${p.targetNumber} L:${p.lives} H:${p.hits}`;
+    const area = document.getElementById('scoreboard-area');
+    area.innerHTML = players.map((p, i) => {
+        if (p.finished && currentGameMode.includes("01")) return "";
+        let a = (i === currentPlayerIndex) ? "active-player" : "";
+        let c = "";
+        if (currentGameMode.includes("01")) c = `Score: ${p.score}`;
+        else if (currentGameMode === "killer") c = `T:${p.targetNumber} L:${p.lives} H:${p.hits}`;
         else {
-            content = `<div class="cricket-grid">`;
+            c = `<div class="cricket-grid">`;
             for (let t in p.cricket) {
-                let lbl = (t == 25) ? "B" : t;
-                let h = p.cricket[t];
-                let isLocked = players.every(player => player.cricket[t] >= 3);
-                let colorClass = isLocked ? "target-locked" : (h >= 3 ? "target-closed" : "target-open");
-                let m = (h === 1) ? "X" : (h === 2) ? "XX" : (h >= 3) ? "XXX" : "-";
-                content += `<span class="${colorClass}">${lbl}:${m}</span>`;
+                let locked = players.every(pl => pl.cricket[t] >= 3);
+                let cls = locked ? "target-locked" : (p.cricket[t] >= 3 ? "target-closed" : "target-open");
+                let m = p.cricket[t] >= 3 ? "XXX" : "X".repeat(p.cricket[t]) || "-";
+                c += `<span class="${cls}">${t==25?'B':t}:${m}</span>`;
             }
-            content += `</div>`;
+            c += `</div>`;
         }
-        scoreArea.innerHTML += `<div class="player-card ${aClass}">${p.emoji}<br><strong>${p.name}</strong><br>${content}</div>`;
-    });
+        return `<div class="player-card ${a}">${p.emoji}<br><b>${p.name}</b><br>${c}</div>`;
+    }).join("");
+    
     if (players[currentPlayerIndex]) {
-        document.getElementById('current-turn-display').innerText = `${players[currentPlayerIndex].name}'s Turn`;
+        document.getElementById('current-turn-display').innerText = players[currentPlayerIndex].name;
         document.getElementById('dart-count-display').innerText = `Dart: ${dartsThrown + 1} / 3`;
     }
 }
@@ -268,7 +246,3 @@ function getRandomNumbers() { return Array.from({length: 20}, (_, i) => i + 1).s
 function saveState() { historyStack.push(JSON.parse(JSON.stringify({ players, currentPlayerIndex, dartsThrown, winners }))); }
 function undoLastThrow() { if (historyStack.length > 0) { const s = historyStack.pop(); players = s.players; currentPlayerIndex = s.currentPlayerIndex; dartsThrown = s.dartsThrown; winners = s.winners; updateUI(); } }
 function quitGame() { if(confirm("Quit?")) resetToMenu(); }
-function updateModifierUI() {
-    document.getElementById('btn-double').style.border = (currentMultiplier === 2) ? "2px solid white" : "none";
-    document.getElementById('btn-triple').style.border = (currentMultiplier === 3) ? "2px solid white" : "none";
-}

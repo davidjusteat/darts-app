@@ -1,8 +1,6 @@
-/* FULL FILE SYNC - style.css */
 * {
     box-sizing: border-box;
     -webkit-tap-highlight-color: transparent;
-    /* Prevents pull-to-refresh and bounce effects on mobile */
     overscroll-behavior: none; 
 }
 
@@ -11,11 +9,11 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* This kills the scroll bar */
-    position: fixed; /* This prevents the "bounce" effect on iPhone */
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    background-color: #1a1a1a;
-    color: white;
+    overflow: hidden;
+    position: fixed;
+    font-family: -apple-system, system-ui, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
 }
 
 #main-container {
@@ -26,61 +24,54 @@ html, body {
     padding: 10px;
 }
 
-/* Scroll only the parts we want, like the player list or scoreboard */
-#player-list-display, #scoreboard-area {
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-}
+h1 { font-size: 1.2rem; margin: 5px 0; color: #ffcc00; }
 
-h1 { font-size: 1.5rem; margin: 5px 0; }
-
-select, input {
-    width: 95%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #444;
-    background: #333;
-    color: white;
-    font-size: 1rem;
+.setup-box {
+    background: #1e1e1e;
+    padding: 10px;
+    border-radius: 10px;
     margin-bottom: 10px;
 }
+
+select, input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #2a2a2a;
+    color: white;
+    font-size: 1rem;
+}
+
+.add-player-row { display: flex; gap: 5px; margin-top: 10px; }
 
 #emoji-picker {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    margin: 10px auto;
+    gap: 4px;
+    margin: 5px 0;
 }
 
 .emoji-option {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     padding: 8px;
-    border-radius: 10px;
+    text-align: center;
+    border-radius: 8px;
 }
-.emoji-option.selected { border: 2px solid #ffcc00; background: #333; }
-.emoji-option.taken { opacity: 0.1; filter: grayscale(1); }
+.emoji-option.selected { background: #ffcc0022; border: 2px solid #ffcc00; }
+.emoji-option.taken { opacity: 0.1; filter: grayscale(1); pointer-events: none; }
 
-#number-buttons {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 6px;
-    margin: 10px 0;
+#mobile-header { background: #1e1e1e; padding: 8px; border-radius: 8px; margin-bottom: 8px; }
+.header-top { display: flex; justify-content: space-between; font-weight: bold; }
+#dart-count-display { color: #ffcc00; font-size: 0.9rem; margin-top: 4px; }
+
+#scoreboard-area {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
 }
-
-button { font-weight: bold; border: none; border-radius: 8px; }
-
-#number-buttons button {
-    padding: 12px 0;
-    background: #444;
-    color: white;
-    font-size: 1.1rem;
-}
-
-.mod-btn { width: 48%; padding: 12px; background: #555; color: white; margin: 1%; }
-.spec-btn { padding: 10px; background: #444; color: white; font-size: 0.8rem; }
-.primary-btn { width: 100%; background: #28a745; padding: 15px; font-size: 1.2rem; color: white; margin-top: 10px; }
-.undo-btn { background: #dc3545; color: white; padding: 10px 15px; }
-.quit-btn { background: #6c757d; color: white; padding: 10px 15px; }
 
 .player-card {
     flex: 0 0 130px;
@@ -88,20 +79,37 @@ button { font-weight: bold; border: none; border-radius: 8px; }
     background: #2a2a2a;
     border-radius: 10px;
     border: 1px solid #444;
-    margin: 5px;
+    text-align: center;
+    font-size: 0.8rem;
 }
-.active-player { border: 3px solid #ffcc00; background: #333; }
-.dead { opacity: 0.3; text-decoration: line-through; }
+.active-player { border: 2px solid #ffcc00; box-shadow: 0 0 10px #ffcc0044; }
+
+#keypad { margin-top: auto; padding-bottom: 10px; }
+
+.modifier-row { display: flex; gap: 5px; margin-bottom: 5px; }
+.mod-btn { flex: 1; padding: 12px; background: #333; border: 1px solid #444; color: white; }
+.active-mod { background: #ffcc00 !important; color: #000 !important; }
+
+#number-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+#number-buttons button { padding: 12px 0; background: #2a2a2a; color: white; font-size: 1.1rem; }
+
+.special-row { display: flex; gap: 4px; margin: 5px 0; }
+.spec-btn { flex: 1; padding: 10px; background: #333; font-size: 0.8rem; color: white; }
+
+.control-row { display: flex; gap: 4px; }
+.undo-btn { flex: 1; background: #8e1f29; padding: 12px; color: white; }
+.quit-btn { flex: 1; background: #444; padding: 12px; color: white; }
+
+.primary-btn { width: 100%; background: #28a745; padding: 15px; color: white; border-radius: 10px; font-size: 1.1rem; }
 
 .cricket-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    font-size: 0.7rem;
+    font-size: 0.65rem;
     background: #111;
     padding: 4px;
     margin-top: 5px;
+    text-align: left;
 }
 .target-closed { color: #28a745; }
 .target-locked { color: #ff4444; }
-
-.leaderboard-item { background: #333; padding: 10px; margin: 5px 0; border-radius: 5px; }
