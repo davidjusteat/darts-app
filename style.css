@@ -1,28 +1,41 @@
-/* MOBILE OPTIMIZATIONS */
+/* FULL FILE SYNC - style.css */
 * {
     box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent; /* Removes blue flash on iPhone tap */
+    -webkit-tap-highlight-color: transparent;
+    /* Prevents pull-to-refresh and bounce effects on mobile */
+    overscroll-behavior: none; 
 }
 
-body {
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* This kills the scroll bar */
+    position: fixed; /* This prevents the "bounce" effect on iPhone */
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    text-align: center;
     background-color: #1a1a1a;
     color: white;
-    margin: 0;
-    padding: 10px;
-    touch-action: manipulation; /* Improves tap response time */
 }
 
 #main-container {
-    max-width: 500px;
-    margin: 0 auto;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
 }
 
-h1 { font-size: 1.5rem; margin-bottom: 5px; }
+/* Scroll only the parts we want, like the player list or scoreboard */
+#player-list-display, #scoreboard-area {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+h1 { font-size: 1.5rem; margin: 5px 0; }
 
 select, input {
-    width: 90%;
+    width: 95%;
     padding: 12px;
     border-radius: 8px;
     border: 1px solid #444;
@@ -32,79 +45,63 @@ select, input {
     margin-bottom: 10px;
 }
 
-/* EMOJI PICKER GRID */
 #emoji-picker {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 8px;
+    gap: 5px;
     margin: 10px auto;
 }
 
 .emoji-option {
-    font-size: 1.8rem;
-    padding: 10px;
-    border: 2px solid transparent;
-    border-radius: 12px;
+    font-size: 1.5rem;
+    padding: 8px;
+    border-radius: 10px;
 }
-.emoji-option.selected { border-color: #ffcc00; background: #333; }
+.emoji-option.selected { border: 2px solid #ffcc00; background: #333; }
 .emoji-option.taken { opacity: 0.1; filter: grayscale(1); }
 
-/* SCORING GRID */
 #number-buttons {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns is better for thumbs */
-    gap: 8px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
     margin: 10px 0;
 }
 
-button {
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    transition: transform 0.1s;
-}
-
-button:active { transform: scale(0.95); } /* Tactile feedback */
+button { font-weight: bold; border: none; border-radius: 8px; }
 
 #number-buttons button {
-    padding: 15px 0;
+    padding: 12px 0;
     background: #444;
     color: white;
-    font-size: 1.2rem;
+    font-size: 1.1rem;
 }
 
-.mod-btn { width: 48%; padding: 15px; margin: 1%; background: #555; color: white; }
-.spec-btn { padding: 12px 15px; background: #444; color: white; font-size: 0.9rem; }
-.primary-btn { width: 90%; background: #28a745; padding: 15px; font-size: 1.2rem; margin-top: 20px; color: white; }
-.undo-btn { background: #dc3545; color: white; padding: 12px 20px; }
-.quit-btn { background: #6c757d; color: white; padding: 12px 20px; }
-
-/* PLAYER CARDS */
-#scoreboard-area {
-    display: flex;
-    overflow-x: auto; /* Scroll horizontally if many players */
-    padding: 10px 0;
-    gap: 10px;
-}
+.mod-btn { width: 48%; padding: 12px; background: #555; color: white; margin: 1%; }
+.spec-btn { padding: 10px; background: #444; color: white; font-size: 0.8rem; }
+.primary-btn { width: 100%; background: #28a745; padding: 15px; font-size: 1.2rem; color: white; margin-top: 10px; }
+.undo-btn { background: #dc3545; color: white; padding: 10px 15px; }
+.quit-btn { background: #6c757d; color: white; padding: 10px 15px; }
 
 .player-card {
-    flex: 0 0 140px; /* Fixed width for cards in a scrollable row */
-    padding: 10px;
+    flex: 0 0 130px;
+    padding: 8px;
     background: #2a2a2a;
-    border-radius: 12px;
-    border: 2px solid #444;
+    border-radius: 10px;
+    border: 1px solid #444;
+    margin: 5px;
 }
-.active-player { border-color: #ffcc00; background: #333; }
+.active-player { border: 3px solid #ffcc00; background: #333; }
+.dead { opacity: 0.3; text-decoration: line-through; }
 
-/* CRICKET GRID FOR MOBILE */
 .cricket-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     background: #111;
-    border-radius: 5px;
-    padding: 5px;
+    padding: 4px;
     margin-top: 5px;
 }
 .target-closed { color: #28a745; }
 .target-locked { color: #ff4444; }
+
+.leaderboard-item { background: #333; padding: 10px; margin: 5px 0; border-radius: 5px; }
