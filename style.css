@@ -1,117 +1,110 @@
-body {
-    font-family: sans-serif;
-    text-align: center;
-    background-color: #222;
-    color: white;
-    padding: 20px;
-    margin: 0;
+/* MOBILE OPTIMIZATIONS */
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Removes blue flash on iPhone tap */
 }
 
-select {
-    padding: 10px;
-    font-size: 1.1rem;
-    background: #444;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    text-align: center;
+    background-color: #1a1a1a;
     color: white;
-    border: 1px solid #666;
+    margin: 0;
+    padding: 10px;
+    touch-action: manipulation; /* Improves tap response time */
+}
+
+#main-container {
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+h1 { font-size: 1.5rem; margin-bottom: 5px; }
+
+select, input {
+    width: 90%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #333;
+    color: white;
+    font-size: 1rem;
     margin-bottom: 10px;
 }
 
+/* EMOJI PICKER GRID */
 #emoji-picker {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 5px;
-    max-width: 300px;
+    gap: 8px;
     margin: 10px auto;
 }
 
 .emoji-option {
-    font-size: 1.5rem;
-    padding: 5px;
-    cursor: pointer;
+    font-size: 1.8rem;
+    padding: 10px;
     border: 2px solid transparent;
-    border-radius: 5px;
+    border-radius: 12px;
 }
+.emoji-option.selected { border-color: #ffcc00; background: #333; }
+.emoji-option.taken { opacity: 0.1; filter: grayscale(1); }
 
-.emoji-option.selected {
-    border-color: #ffcc00;
-    background-color: #444;
-}
-
-/* Style for emojis already taken by other players */
-.emoji-option.taken {
-    opacity: 0.1;
-    cursor: not-allowed;
-    filter: grayscale(100%);
-}
-
+/* SCORING GRID */
 #number-buttons {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    max-width: 400px;
-    margin: 10px auto;
-}
-
-#special-buttons, #controls, #results-controls {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.active-modifier {
-    background-color: #ffcc00 !important;
-    color: black !important;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns is better for thumbs */
+    gap: 8px;
+    margin: 10px 0;
 }
 
 button {
-    padding: 15px;
-    font-size: 1rem;
-    cursor: pointer;
-    background-color: #444;
-    color: white;
-    border: 1px solid #666;
-    border-radius: 4px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    transition: transform 0.1s;
 }
 
-button:hover { background-color: #666; }
+button:active { transform: scale(0.95); } /* Tactile feedback */
 
-#start-game-btn { background-color: #28a745; margin: 20px auto; }
+#number-buttons button {
+    padding: 15px 0;
+    background: #444;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.mod-btn { width: 48%; padding: 15px; margin: 1%; background: #555; color: white; }
+.spec-btn { padding: 12px 15px; background: #444; color: white; font-size: 0.9rem; }
+.primary-btn { width: 90%; background: #28a745; padding: 15px; font-size: 1.2rem; margin-top: 20px; color: white; }
+.undo-btn { background: #dc3545; color: white; padding: 12px 20px; }
+.quit-btn { background: #6c757d; color: white; padding: 12px 20px; }
+
+/* PLAYER CARDS */
+#scoreboard-area {
+    display: flex;
+    overflow-x: auto; /* Scroll horizontally if many players */
+    padding: 10px 0;
+    gap: 10px;
+}
 
 .player-card {
-    border: 1px solid #555;
-    padding: 15px;
-    margin: 10px;
-    display: inline-block;
-    min-width: 170px;
-    vertical-align: top;
-    border-radius: 8px;
-    background-color: #2a2a2a;
+    flex: 0 0 140px; /* Fixed width for cards in a scrollable row */
+    padding: 10px;
+    background: #2a2a2a;
+    border-radius: 12px;
+    border: 2px solid #444;
 }
+.active-player { border-color: #ffcc00; background: #333; }
 
-.active-player { border: 3px solid #ffcc00; background-color: #333; }
-.dead { opacity: 0.3; text-decoration: line-through; }
-
+/* CRICKET GRID FOR MOBILE */
 .cricket-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
-    font-size: 0.9rem;
-    margin-top: 10px;
-    text-align: left;
-    padding: 8px;
+    grid-template-columns: 1fr 1fr;
+    font-size: 0.75rem;
     background: #111;
-    border-radius: 4px;
-}
-
-.target-open { color: #888; }
-.target-closed { color: #28a745; font-weight: bold; }
-.target-locked { color: #dc3545; font-weight: bold; }
-
-.leaderboard-item {
-    background: #333;
-    padding: 10px;
-    margin: 5px auto;
-    max-width: 300px;
     border-radius: 5px;
+    padding: 5px;
+    margin-top: 5px;
 }
+.target-closed { color: #28a745; }
+.target-locked { color: #ff4444; }
