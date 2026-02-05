@@ -21,95 +21,57 @@ html, body {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 10px;
-}
-
-h1 { font-size: 1.2rem; margin: 5px 0; color: #ffcc00; }
-
-.setup-box {
-    background: #1e1e1e;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-}
-
-select, input {
-    width: 100%;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #333;
-    background: #2a2a2a;
-    color: white;
-    font-size: 1rem;
-}
-
-.add-player-row { display: flex; gap: 5px; margin-top: 10px; }
-
-#emoji-picker {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 4px;
-    margin: 5px 0;
-}
-
-.emoji-option {
-    font-size: 1.4rem;
     padding: 8px;
-    text-align: center;
-    border-radius: 8px;
 }
-.emoji-option.selected { background: #ffcc0022; border: 2px solid #ffcc00; }
+
+h1 { font-size: 1.1rem; margin: 5px 0; color: #ffcc00; }
+
+.setup-box { background: #1e1e1e; padding: 10px; border-radius: 10px; margin-bottom: 8px; }
+select, input { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #333; background: #2a2a2a; color: white; font-size: 1rem; }
+
+#emoji-picker { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 5px 0; }
+.emoji-option { font-size: 1.3rem; padding: 6px; text-align: center; border-radius: 8px; }
+.emoji-option.selected { border: 2px solid #ffcc00; }
 .emoji-option.taken { opacity: 0.1; filter: grayscale(1); pointer-events: none; }
 
-#mobile-header { background: #1e1e1e; padding: 8px; border-radius: 8px; margin-bottom: 8px; }
-.header-top { display: flex; justify-content: space-between; font-weight: bold; }
-#dart-count-display { color: #ffcc00; font-size: 0.9rem; margin-top: 4px; }
+#mobile-header { background: #1e1e1e; padding: 6px; border-radius: 8px; margin-bottom: 5px; }
+.header-top { display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem; }
+#dart-count-display { color: #ffcc00; font-size: 0.8rem; }
 
-#scoreboard-area {
-    display: flex;
-    overflow-x: auto;
-    gap: 10px;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
+#scoreboard-area { display: flex; overflow-x: auto; gap: 8px; margin-bottom: 5px; }
+.player-card { flex: 0 0 110px; padding: 6px; background: #2a2a2a; border-radius: 8px; border: 1px solid #444; font-size: 0.75rem; }
+.active-player { border: 2px solid #ffcc00; }
+
+#keypad { margin-top: auto; padding-bottom: 5px; }
+
+/* FLEXBOX FOR SIDE-BY-SIDE MODIFIERS */
+.modifier-row { 
+    display: flex; 
+    gap: 5px; 
+    margin-bottom: 5px; 
 }
-
-.player-card {
-    flex: 0 0 130px;
-    padding: 8px;
-    background: #2a2a2a;
-    border-radius: 10px;
-    border: 1px solid #444;
-    text-align: center;
-    font-size: 0.8rem;
+.mod-btn { 
+    flex: 1; /* This makes both buttons equal width */
+    padding: 12px; 
+    background: #333; 
+    border: 1px solid #444; 
+    color: white; 
+    border-radius: 8px;
 }
-.active-player { border: 2px solid #ffcc00; box-shadow: 0 0 10px #ffcc0044; }
-
-#keypad { margin-top: auto; padding-bottom: 10px; }
-
-.modifier-row { display: flex; gap: 5px; margin-bottom: 5px; }
-.mod-btn { flex: 1; padding: 12px; background: #333; border: 1px solid #444; color: white; }
 .active-mod { background: #ffcc00 !important; color: #000 !important; }
 
 #number-buttons { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-#number-buttons button { padding: 12px 0; background: #2a2a2a; color: white; font-size: 1.1rem; }
+#number-buttons button { padding: 10px 0; background: #2a2a2a; color: white; border-radius: 6px; font-size: 1rem; }
 
 .special-row { display: flex; gap: 4px; margin: 5px 0; }
-.spec-btn { flex: 1; padding: 10px; background: #333; font-size: 0.8rem; color: white; }
+.spec-btn { flex: 1; padding: 8px; background: #333; font-size: 0.75rem; color: white; border-radius: 6px; }
 
 .control-row { display: flex; gap: 4px; }
-.undo-btn { flex: 1; background: #8e1f29; padding: 12px; color: white; }
-.quit-btn { flex: 1; background: #444; padding: 12px; color: white; }
+.undo-btn { flex: 1; background: #8e1f29; padding: 10px; color: white; border-radius: 6px; }
+.quit-btn { flex: 1; background: #444; padding: 10px; color: white; border-radius: 6px; }
 
-.primary-btn { width: 100%; background: #28a745; padding: 15px; color: white; border-radius: 10px; font-size: 1.1rem; }
+.primary-btn { width: 100%; background: #28a745; padding: 12px; color: white; border-radius: 8px; }
 
-.cricket-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    font-size: 0.65rem;
-    background: #111;
-    padding: 4px;
-    margin-top: 5px;
-    text-align: left;
-}
+.cricket-grid { display: grid; grid-template-columns: 1fr 1fr; font-size: 0.6rem; background: #111; padding: 3px; margin-top: 3px; }
 .target-closed { color: #28a745; }
 .target-locked { color: #ff4444; }
